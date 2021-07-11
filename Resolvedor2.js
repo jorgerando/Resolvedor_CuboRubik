@@ -1,5 +1,5 @@
 
-class Tapa {
+class Tapa{
 
   constructor( color , posicion ){
 
@@ -34,7 +34,7 @@ class Tapa {
 
 class Plano{
 
-  constructor(colores , lado , punto , vectorUnitarioA , vectorUnitarioB ){
+  constructor( lado , punto , vectorUnitarioA , vectorUnitarioB ){
 
    this.colores = [ [[ 255,255,255],[ 255,255,255],[ 255,255,255]], [[ 255,255,255],[ 255,255,255],[ 255,255,255]] , [[ 255,255,255],[ 255,255,255],[ 255,255,255] ] ] ;;
    this.lado = lado ;
@@ -88,7 +88,8 @@ class Plano{
     }
 
    return puntos ;
-  }
+ }
+
 
   dibujar(){
 
@@ -118,48 +119,282 @@ class Plano{
 
   }
 
+  color(x,y){
+
+    return this.colores[x][y]
+  }
+
+}
+
+class Cubo{
+
+  constructor(){
+
+    this.inicializarColores();
+    this.inicializarPlanos() ;
+
+    //inicializo la posiciones de relativas de las cara
+
+    this.Front = [ [this.rojo,this.rojo,this.rojo] , [this.rojo,this.rojo,this.rojo] , [this.rojo,this.rojo,this.rojo] ] ;
+    this.Back = [ [this.naranja,this.naranja,this.naranja] , [this.naranja,this.naranja,this.naranja] ,[this.naranja,this.naranja,this.naranja]  ]
+
+    this.Left = [ [this.azul ,this.azul ,this.azul] , [this.azul ,this.azul ,this.azul] ,[this.azul ,this.azul ,this.azul] ] ;
+    this.Right = [ [this.verde ,this.verde ,this.verde] , [this.verde ,this.verde ,this.verde] ,[this.verde ,this.verde ,this.verde] ] ;
+
+    this.Down = [ [this.blanco ,this.blanco,this.blanco] ,[this.blanco ,this.blanco,this.blanco] ,[this.blanco ,this.blanco,this.blanco]  ] ;
+    this.Top = [ [this.amarillo,this.amarillo,this.amarillo] , [this.amarillo,this.amarillo,this.amarillo] ,[this.amarillo,this.amarillo,this.amarillo]] ;
+
+  }
+
+  inicializarColores(){
+
+    this.blanco = [255,255,255] ;
+    this.amarillo = [	255, 233, 0] ;
+    this.rojo = [255,0,0] ;
+    this.naranja = [255,128,0] ;
+    this.azul = [0,0,255] ;
+    this.verde = [0,255,0] ;
+
+  }
+
+  inicializarPlanos(){
+
+    var lado = 200 ;
+
+    this.plano1 = new Plano(lado , new p5.Vector(0,0,0) ,new p5.Vector(1,0,0) , new p5.Vector(0,1,0) ) ;
+    this.plano2 = new Plano(lado , new p5.Vector(0,0,0) ,new p5.Vector(1,0,0) , new p5.Vector(0,0,1) ) ;
+    this.plano3 = new Plano(lado , new p5.Vector(0,0,0) ,new p5.Vector(0,1,0) , new p5.Vector(0,0,1) ) ;
+    this.plano4 = new Plano(lado , new p5.Vector(lado,lado,lado) ,new p5.Vector(-1,0,0) , new p5.Vector(0,-1,0) ) ;
+    this.plano5 = new Plano(lado , new p5.Vector(lado,lado,lado) ,new p5.Vector(-1,0,0) , new p5.Vector(0,0,-1) ) ;
+    this.plano6 = new Plano(lado , new p5.Vector(lado,lado,lado) ,new p5.Vector(0,-1,0) , new p5.Vector(0,0,-1) ) ;
+
+  }
+
+// Movimientos
+
+   z(modo){
+
+     var F = this.Front ;
+     var B = this.Back ;
+
+     var R = this.Right ;
+     var L = this.Left ;
+
+     var T = this.Top ;
+     var D = this.Down ;
+
+     if(modo){
+      // z
+      this.Front = R ;
+      this.Right = B ;
+      this.Back = L ;
+      this.Left = F ;
+
+     }else {
+      // z'
+      this.Front = L ;
+      this.Right = F ;
+      this.Back = R ;
+      this.Left = B ;
+
+     }
+
+   }
+
+   x(modo){
+
+     var F = this.Front ;
+     var B = this.Back ;
+
+     var R = this.Right ;
+     var L = this.Left ;
+
+     var T = this.Top ;
+     var D = this.Down ;
+
+     if(modo){
+      // x
+      this.Top = F ;
+      this.Front = D ;
+      this.Down = B ;
+      this.Back = T ;
+
+     }else {
+      // x'
+      this.Top = B ;
+      this.Front = T ;
+      this.Down = F ;
+      this.Back = D ;
+
+     }
+
+
+   }
+
+   y(modo){
+
+     var F = this.Front ;
+     var B = this.Back ;
+
+     var R = this.Right ;
+     var L = this.Left ;
+
+     var T = this.Top ;
+     var D = this.Down ;
+
+     if(modo){
+      // y
+      this.Top =  L ;
+      this.Right = T ;
+      this.Down = R ;
+      this.Left = D ;
+
+     }else {
+      // y'
+      this.Top =  R ;
+      this.Right = D ;
+      this.Down = L ;
+      this.Left = T ;
+
+
+     }
+
+   }
+
+   movimiento( movimientos ){
+   // un string con n ---> un numero u M un movimiento x o y o z : nM o nM'
+   movimientos = movimientos.trim() ;
+   var repeticiones = 1
+   var movimiento = "-" ;
+   var primo = false ;
+
+   if (  movimientos.length == 1 ) {
+     // M -- un movimiento no orario
+      movimiento = movimientos[0] ;
+
+   } else if  ( movimientos.length == 2 && movimientos[1] == "'" ){
+     // M' --> movimiento antihorario
+       movimiento = movimientos[0] ;
+       primo = true ;
+
+   } else if ( movimientos.length == 2 && movimientos[1] != "'" ){
+     // nM --> n movimientos no primos
+      repeticiones = parseInt(movimientos[0],10) ;
+      movimiento = movimientos[1] ;
+
+   }else {
+      // nM' n movimientos primos
+      repeticiones = movimientos[0] ;
+      movimiento = movimientos[1] ;
+      primo = true ;
+   }
+
+
+   for (var i = 0 ;  i < repeticiones ; i++ ){
+
+     if ( movimiento == "x" && !primo ){
+       //x
+       this.x(true) ;
+     } else if (movimiento == "x" && primo  ){
+       //x'
+       this.x(false) ;
+     } else if (movimiento == "y" && !primo ){
+       //y
+       this.y(true);
+     }else if (movimiento == "y" && primo  ){
+       //y'
+       this.y(false);
+     }else if (movimiento == "z" && !primo){
+       //z
+       this.z(true);
+     }else if (movimiento == "z" && primo){
+       //z'
+       this.z(false) ;
+     }
+
+   }
+ }
+
+   secuenciaMovimientos( secuencia ){
+
+      secuencia = secuencia.trim();
+      console.log(secuencia);
+      var movimientos = secuencia.split(',') ;
+
+      for (var i = 0 ; i < movimientos.length  ; i++ ) {
+
+          var movimiento_a = movimientos[i].trim();
+          this.movimiento(movimiento_a);
+      }
+
+   }
+
+
+
+// Giros
+
+  dibujar(){
+
+    this.plano4.colorear(this.Front,0) ;
+    this.plano5.colorear(this.Left,0) ;
+    this.plano3.colorear(this.Top,0) ;
+    this.plano1.colorear(this.Back,0) ;
+    this.plano2.colorear(this.Right,0) ;
+    this.plano6.colorear(this.Down,0) ;
+
+
+    this.plano1.dibujar() ;
+    this.plano2.dibujar() ;
+    this.plano3.dibujar() ;
+    this.plano4.dibujar() ;
+    this.plano5.dibujar() ;
+    this.plano6.dibujar() ;
+
+
+  }
+
+}
+
+
+function dibujarEjes(){
+
+   fill(0,0,0);
+   stroke(0,0,0);
+   strokeWeight(3) ;
+   line(0,0,0,-200,0,0) ;
+   line(0,0,0,0,-200,0) ;
+   line(0,0,0,0,0,200) ;
+   strokeWeight(40) ;
+   stroke(255,0,0);
+   point(0,-200,0)
+   stroke(0,255,0);
+   point(0,0,200)
+   stroke(0,0,255);
+   point(-200,0,0)
 
 }
 
 var easycam ;
-var lado = 200
-var rojo = [255,0,0];
-var azul = [0,255,0];
-var verde = [0,0,255];
-colores =[ [rojo,rojo,rojo ], [azul,azul,azul] , [verde,verde,verde ] ] ;
+var cubo = new Cubo() ;
 
-var plano1 = new Plano(colores,lado , new p5.Vector(0,0,0) ,new p5.Vector(1,0,0) , new p5.Vector(0,1,0) ) ;
-var plano2 = new Plano(colores,lado , new p5.Vector(0,0,0) ,new p5.Vector(1,0,0) , new p5.Vector(0,0,1) ) ;
-var plano3 = new Plano(colores,lado , new p5.Vector(0,0,0) ,new p5.Vector(0,1,0) , new p5.Vector(0,0,1) ) ;
+cubo.secuenciaMovimientos(" x , y' ");
 
-var plano4 = new Plano(colores,lado , new p5.Vector(lado,lado,lado) ,new p5.Vector(-1,0,0) , new p5.Vector(0,-1,0) ) ;
-plano4.colorear(colores,4);
-var plano5 = new Plano(colores,lado , new p5.Vector(lado,lado,lado) ,new p5.Vector(-1,0,0) , new p5.Vector(0,0,-1) ) ;
-var plano6 = new Plano(colores,lado , new p5.Vector(lado,lado,lado) ,new p5.Vector(0,-1,0) , new p5.Vector(0,0,-1) ) ;
-
-var angulo = 0;
 function setup() {
   createCanvas(800, 800 , WEBGL);
   easycam = createEasyCam() ;
 }
 
 function draw() {
-
-  rotateX(PI/3);
-  rotateY(PI/3);
   background(255);
-  stroke(0);
-  line(0,0,0,300,0,0) ;
-  line(0,0,0,0,300,0) ;
-  line(0,0,0,0,0,300) ;
+  rotateZ(PI/2);
+  rotateX(-PI/4) ;
+  rotateY(PI/4) ;
+  dibujarEjes();
 
-  plano1.dibujar() ;
-  plano2.dibujar() ;
-  plano3.dibujar() ;
+  translate(-100,-100,-100);
+  cubo.dibujar() ;
 
-  plano4.dibujar() ;
-  plano5.dibujar() ;
-  plano6.dibujar() ;
+
 
 
 
