@@ -132,6 +132,7 @@ class Cubo{
 
     this.inicializarColores();
     this.inicializarPlanos() ;
+    this.inicializarSecuenciaImportatesMovimientos() ;
 
     //inicializo la posiciones de relativas de las cara
 
@@ -261,34 +262,65 @@ class Cubo{
 
    }
 
-   movimiento( movimientos ){
-   // un string con n ---> un numero u M un movimiento x o y o z : nM o nM'
-   movimientos = movimientos.trim() ;
-   var repeticiones = 1
-   var movimiento = "-" ;
-   var primo = false ;
+   procesarMovimiento( movimientos ){
 
-   if (  movimientos.length == 1 ) {
-     // M -- un movimiento no orario
-      movimiento = movimientos[0] ;
+     movimientos = movimientos.trim() ;
+     var repeticiones = 1
+     var movimiento = "-" ;
+     var primo = false ;
 
-   } else if  ( movimientos.length == 2 && movimientos[1] == "'" ){
-     // M' --> movimiento antihorario
-       movimiento = movimientos[0] ;
-       primo = true ;
+     if (  movimientos.length == 1 ) {
+       // M -- un movimiento no orario
+        movimiento = movimientos[0] ;
 
-   } else if ( movimientos.length == 2 && movimientos[1] != "'" ){
-     // nM --> n movimientos no primos
-      repeticiones = parseInt(movimientos[0],10) ;
-      movimiento = movimientos[1] ;
+     } else if  ( movimientos.length == 2 && movimientos[1] == "'" ){
+       // M' --> movimiento antihorario
+         movimiento = movimientos[0] ;
+         primo = true ;
 
-   }else {
-      // nM' n movimientos primos
-      repeticiones = movimientos[0] ;
-      movimiento = movimientos[1] ;
-      primo = true ;
+     } else if ( movimientos.length == 2 && movimientos[1] != "'" ){
+       // nM --> n movimientos no primos
+        repeticiones = parseInt(movimientos[0],10) ;
+        movimiento = movimientos[1] ;
+
+     }else {
+        // nM' n movimientos primos
+        repeticiones = movimientos[0] ;
+        movimiento = movimientos[1] ;
+        primo = true ;
+     }
+
+     return [ repeticiones ,movimiento , primo ] ;
+
+
+
+
+
+
    }
 
+   procesarSecuencia(secuencia){
+     secuencia = secuencia.trim();
+     var movimientos = secuencia.split(',') ;
+
+     var partes_secuncia = [];
+
+     for (var i = 0 ; i < movimientos.length  ; i++ ) {
+
+         var movimiento_a = movimientos[i].trim();
+         partes_secuncia.push(movimiento_a) ;
+     }
+
+     return partes_secuncia ;
+   }
+
+   movimiento( movimientos ){
+
+   var partes = this.procesarMovimiento(movimientos) ;
+
+   var repeticiones = partes[0] ;
+   var movimiento = partes[1] ;
+   var primo = partes[2] ;
 
    for (var i = 0 ;  i < repeticiones ; i++ ){
 
@@ -317,9 +349,7 @@ class Cubo{
 
    secuenciaMovimientos( secuencia ){
 
-      secuencia = secuencia.trim();
-      console.log(secuencia);
-      var movimientos = secuencia.split(',') ;
+      var movimientos = this.procesarSecuencia(secuencia) ;
 
       for (var i = 0 ; i < movimientos.length  ; i++ ) {
 
@@ -329,7 +359,115 @@ class Cubo{
 
    }
 
+   negadoMovimiento( movimiento ){
 
+     var partes = this.procesarMovimiento(movimiento) ;
+
+     var repeticiones = partes[0] ;
+     var movimiento = partes[1] ;
+     var primo = partes[2] ;
+
+     var negado = "-";
+
+     if ( movimiento == "x" && !primo ){
+       //x negado x'
+       negado="x'" ;
+     } else if (movimiento == "x" && primo  ){
+       //x' negado x
+       negado="x" ;
+     } else if (movimiento == "y" && !primo ){
+       //y negado y'
+       negado="y'" ;
+     }else if (movimiento == "y" && primo  ){
+       //y' negado y
+       negado="y" ;
+     }else if (movimiento == "z" && !primo){
+       //z negado z
+       negado="z'"
+     }else if (movimiento == "z" && primo){
+       //z' negado z
+       negado="z"
+     }
+
+     var movimiento_negado =  repeticiones.toString()+negado;
+     return movimiento_negado ;
+
+
+
+
+
+   }
+
+   secuenciaNegada(secuencia){
+
+     var movimientos = this.procesarSecuencia(secuencia);
+     var secuencia_negada = "" ;
+     for( var i =  movimientos.length ; i > 0 ; i--){
+        secuencia_negada = secuencia_negada+this.negadoMovimiento(movimientos[i-1])+" ,";
+     }
+
+     return secuencia_negada ;
+
+   }
+
+   movimientoAleatorio(){
+
+         var R1 = Math.random() ;
+         var R2 = Math.random() ;
+         var R3 = Math.random() ;
+
+         var movimiento = "" ;
+         var repeticiones = "" ;
+         var primo = "" ;
+
+         if ( R1 < 1/3 ){
+            movimiento = "x" ;
+         }else if( R1 < 2/3 ){
+            movimiento = "y" ;
+         }else {
+            movimiento = "z"
+         }
+
+         if ( R2 < 1/3 ){
+            repeticiones = "1" ;
+         }else if( R2 < 2/3 ){
+            repeticiones = "2" ;
+         }else {
+            repeticiones = "3" ;
+         }
+
+         if (R3 < 1/2) {
+            primo="'" ;
+         }else{
+            primo="" ;
+         }
+
+         var movimiento_r = repeticiones+movimiento+primo ;
+         return movimiento_r ;
+
+
+   }
+
+   secuenciaMovimientosAletorios(n){
+     var secuencia = "" ;
+     for( var i = 0 ; i < n - 1 ; i++){
+        secuencia = secuencia+this.movimientoAleatorio()+" ,";
+     }
+     secuencia = secuencia+this.movimientoAleatorio() ;
+     return secuencia ;
+   }
+
+   inicializarSecuenciaImportatesMovimientos(){
+
+     this.to_Right = " z " ;
+     this.to_Back = " 2z " ;
+     this.to_Left = " z' " ;
+
+     this.top_Right = "  x' " ;
+     this.top_Back = " x' , y " ;
+     this.top_Left = " x' , 2y " ;
+     this.top_Front = " x' , y' " ;
+   }
 
 // Giros
 
@@ -377,7 +515,14 @@ function dibujarEjes(){
 var easycam ;
 var cubo = new Cubo() ;
 
-cubo.secuenciaMovimientos(" x , y' ");
+secuencia = cubo.secuenciaMovimientosAletorios(5);
+negada = cubo.secuenciaNegada(secuencia);
+
+console.log(secuencia);
+console.log(negada);
+
+cubo.secuenciaMovimientos(secuencia);
+cubo.secuenciaMovimientos(negada);
 
 function setup() {
   createCanvas(800, 800 , WEBGL);
