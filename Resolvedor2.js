@@ -191,6 +191,28 @@ class Cubo{
     return matriz ;
   }
 
+  reflexionXMatriz(matriz){
+
+   var g_matriz = matriz ;
+
+   var A = g_matriz[2];
+   var B = g_matriz[0];
+
+   var n_matriz = matriz ;
+
+   n_matriz[0] = A ;
+   n_matriz[2] = B;
+
+   return n_matriz ;
+
+  }
+
+  reflexionYMatriz(matriz){
+     var A = this.rotarMatrizN(matriz,2);
+     var B = this.reflexionXMatriz(A) ;
+     return B ;
+  }
+
 // transfomaciones
 
   procesarTransfomacion( movimientos){
@@ -248,7 +270,7 @@ class Cubo{
   aplicarSecuenciaTransformaciones( secuencia ){
 
    var trans = this.procesarSecuencia(secuencia) ;
-   console.log(trans);
+
 
    for (var i = 0 ; i < trans.length  ; i++ ) {
 
@@ -278,6 +300,7 @@ class Cubo{
 
   }
 
+
 // Movimientos
 
    z(prima){
@@ -294,15 +317,18 @@ class Cubo{
      if(!prima){
       // z
       this.Front = R ;
-      this.Right = B ;
+      this.Right = this.reflexionYMatriz(B);
       this.Back = L ;
-      this.Left = F ;
+      this.Left =  this.reflexionYMatriz(F);
+
+
+
 
      }else {
       // z'
-      this.Front = L ;
+      this.Front = this.reflexionYMatriz(L) ;
       this.Right = F ;
-      this.Back = R ;
+      this.Back = this.reflexionYMatriz(R) ;
       this.Left = B ;
 
      }
@@ -322,17 +348,17 @@ class Cubo{
 
      if(!prima){
       // x
-      this.Top = F ;
+      this.Top = this.reflexionXMatriz(F) ;
       this.Front = D ;
-      this.Down = B ;
+      this.Down = this.reflexionXMatriz(B) ;
       this.Back = T ;
 
      }else {
       // x'
       this.Top = B ;
-      this.Front = T ;
+      this.Front = this.reflexionXMatriz(T) ;
       this.Down = F ;
-      this.Back = D ;
+      this.Back = this.reflexionXMatriz(D) ;
 
      }
 
@@ -352,17 +378,17 @@ class Cubo{
 
      if(!prima){
       // y
-      this.Top =  L ;
-      this.Right = T ;
-      this.Down = R ;
-      this.Left = D ;
+      this.Top =  this.rotarMatrizN(L,1) ;
+      this.Right = this.reflexionYMatriz(this.rotarMatrizN(T,1)) ;
+      this.Down = this.rotarMatrizN(R,1) ;
+      this.Left = this.reflexionYMatriz(this.rotarMatrizN(D,1)) ;
 
      }else {
       // y'
-      this.Top =  R ;
-      this.Right = D ;
-      this.Down = L ;
-      this.Left = T ;
+      this.Top =  this.reflexionYMatriz(this.rotarMatrizN(R,1))  ;
+      this.Right = this.rotarMatrizN(D,3) ;
+      this.Down = this.reflexionYMatriz(this.rotarMatrizN(L,1)) ;
+      this.Left = this.rotarMatrizN(T,3) ;
 
 
      }
@@ -949,13 +975,14 @@ function dibujarEjes(){
 var easycam ;
 var cubo = new Cubo() ;
 
-var secuencia = cubo.secuenciaGirosAleatorios(3);
-var negada = cubo.secuenciaNegadaGiros(secuencia) ;
+//var secuencia = cubo.secuenciaGirosAleatorios(3);
+//var negada = cubo.secuenciaNegadaGiros(secuencia) ;
 
-cubo.aplicarSecuenciaTransformaciones(secuencia);
+
+//cubo.aplicarSecuenciaTransformaciones(" ");
 //cubo.aplicarSecuenciaTransformaciones(negada);
 
-console.log(negada);
+
 
 function setup() {
   createCanvas(800, 800 , WEBGL);
