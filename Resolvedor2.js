@@ -90,7 +90,6 @@ class Plano{
    return puntos ;
  }
 
-
   dibujar(){
 
    var puntos = this.calcularPuntos() ;
@@ -140,7 +139,7 @@ class Cubo{
     this.Back = [ [this.naranja,this.naranja,this.naranja] , [this.naranja,this.naranja,this.naranja] ,[this.naranja,this.naranja,this.naranja]  ]
 
     this.Left = [ [this.azul ,this.azul ,this.azul] , [this.azul ,this.azul ,this.azul] ,[this.azul ,this.azul ,this.azul] ] ;
-    this.Right = [ [this.verde ,this.verde ,this.verde] , [this.verde ,this.verde ,this.verde] ,[this.verde ,this.verde ,this.verde] ] ;
+    this.Right = [ [this.verde ,this.verde,this.verde] , [this.verde ,this.verde ,this.verde] ,[this.verde ,this.verde ,this.verde] ] ;
 
     this.Down = [ [this.blanco ,this.blanco,this.blanco] ,[this.blanco ,this.blanco,this.blanco] ,[this.blanco ,this.blanco,this.blanco]  ] ;
     this.Top = [ [this.amarillo,this.amarillo,this.amarillo] , [this.amarillo,this.amarillo,this.amarillo] ,[this.amarillo,this.amarillo,this.amarillo]] ;
@@ -171,9 +170,117 @@ class Cubo{
 
   }
 
+  rotarMatriz(matriz){
+
+  var nuevamatriz =  [ ["0","0","0"] , ["0","0","0"] ,[ "0" , "0" , "0" ] ] ;
+  for (var x=0 ; x<matriz.length ;x++) {
+   for (var y=0 ; y<matriz.length ;y++) {
+    nuevamatriz[y][matriz.length-1-x] = matriz[x][y];
+    }
+   }
+
+   return nuevamatriz ;
+
+  }
+
+  rotarMatrizN(matriz,n){
+
+    for(var i = 0 ; i < n ; i++ ){
+      matriz = this.rotarMatriz(matriz);
+    }
+    return matriz ;
+  }
+
+// transfomaciones
+
+  procesarTransfomacion( movimientos){
+
+  movimientos = movimientos.trim() ;
+  var repeticiones = 1
+  var movimiento = "-" ;
+  var primo = false ;
+
+  if (  movimientos.length == 1 ) {
+    // M -- un movimiento no orario
+     movimiento = movimientos[0] ;
+
+  } else if  ( movimientos.length == 2 && movimientos[1] == "'" ){
+    // M' --> movimiento antihorario
+      movimiento = movimientos[0] ;
+      primo = true ;
+
+  } else if ( movimientos.length == 2 && movimientos[1] != "'" ){
+    // nM --> n movimientos no primos
+     repeticiones = parseInt(movimientos[0],10) ;
+     movimiento = movimientos[1] ;
+
+  }else {
+     // nM' n movimientos primos
+     repeticiones = movimientos[0] ;
+     movimiento = movimientos[1] ;
+     primo = true ;
+  }
+
+  return [ repeticiones ,movimiento , primo ] ;
+
+
+
+
+
+
+}
+
+  procesarSecuencia(secuencia){
+  secuencia = secuencia.trim();
+  var movimientos = secuencia.split(',') ;
+
+  var partes_secuncia = [];
+
+  for (var i = 0 ; i < movimientos.length  ; i++ ) {
+
+      var movimiento_a = movimientos[i].trim();
+      partes_secuncia.push(movimiento_a) ;
+  }
+
+  return partes_secuncia ;
+}
+
+  aplicarSecuenciaTransformaciones( secuencia ){
+
+   var trans = this.procesarSecuencia(secuencia) ;
+   console.log(trans);
+
+   for (var i = 0 ; i < trans.length  ; i++ ) {
+
+       var trans_a = trans[i].trim();
+
+       if( this.esUnMovimiento(trans_a) ){
+
+
+
+        this.aplicarMovimiento(trans_a);
+       }else{
+
+
+
+        this.aplicarGiro(trans_a);
+       }
+   }
+
+}
+
+  esUnMovimiento( transformacion ){
+
+    var partes = this.procesarTransfomacion(transformacion );
+    var Tr = partes[1].trim();
+    var condicion = Tr=="x" || Tr=="y" || Tr=="z"
+    return  condicion;
+
+  }
+
 // Movimientos
 
-   z(modo){
+   z(prima){
 
      var F = this.Front ;
      var B = this.Back ;
@@ -184,7 +291,7 @@ class Cubo{
      var T = this.Top ;
      var D = this.Down ;
 
-     if(modo){
+     if(!prima){
       // z
       this.Front = R ;
       this.Right = B ;
@@ -202,7 +309,7 @@ class Cubo{
 
    }
 
-   x(modo){
+   x(prima){
 
      var F = this.Front ;
      var B = this.Back ;
@@ -213,7 +320,7 @@ class Cubo{
      var T = this.Top ;
      var D = this.Down ;
 
-     if(modo){
+     if(!prima){
       // x
       this.Top = F ;
       this.Front = D ;
@@ -232,7 +339,7 @@ class Cubo{
 
    }
 
-   y(modo){
+   y(prima){
 
      var F = this.Front ;
      var B = this.Back ;
@@ -243,7 +350,7 @@ class Cubo{
      var T = this.Top ;
      var D = this.Down ;
 
-     if(modo){
+     if(!prima){
       // y
       this.Top =  L ;
       this.Right = T ;
@@ -262,61 +369,9 @@ class Cubo{
 
    }
 
-   procesarMovimiento( movimientos ){
+   aplicarMovimiento( movimientos ){
 
-     movimientos = movimientos.trim() ;
-     var repeticiones = 1
-     var movimiento = "-" ;
-     var primo = false ;
-
-     if (  movimientos.length == 1 ) {
-       // M -- un movimiento no orario
-        movimiento = movimientos[0] ;
-
-     } else if  ( movimientos.length == 2 && movimientos[1] == "'" ){
-       // M' --> movimiento antihorario
-         movimiento = movimientos[0] ;
-         primo = true ;
-
-     } else if ( movimientos.length == 2 && movimientos[1] != "'" ){
-       // nM --> n movimientos no primos
-        repeticiones = parseInt(movimientos[0],10) ;
-        movimiento = movimientos[1] ;
-
-     }else {
-        // nM' n movimientos primos
-        repeticiones = movimientos[0] ;
-        movimiento = movimientos[1] ;
-        primo = true ;
-     }
-
-     return [ repeticiones ,movimiento , primo ] ;
-
-
-
-
-
-
-   }
-
-   procesarSecuencia(secuencia){
-     secuencia = secuencia.trim();
-     var movimientos = secuencia.split(',') ;
-
-     var partes_secuncia = [];
-
-     for (var i = 0 ; i < movimientos.length  ; i++ ) {
-
-         var movimiento_a = movimientos[i].trim();
-         partes_secuncia.push(movimiento_a) ;
-     }
-
-     return partes_secuncia ;
-   }
-
-   movimiento( movimientos ){
-
-   var partes = this.procesarMovimiento(movimientos) ;
+   var partes = this.procesarTransfomacion(movimientos) ;
 
    var repeticiones = partes[0] ;
    var movimiento = partes[1] ;
@@ -324,44 +379,25 @@ class Cubo{
 
    for (var i = 0 ;  i < repeticiones ; i++ ){
 
-     if ( movimiento == "x" && !primo ){
-       //x
-       this.x(true) ;
-     } else if (movimiento == "x" && primo  ){
-       //x'
-       this.x(false) ;
-     } else if (movimiento == "y" && !primo ){
-       //y
-       this.y(true);
-     }else if (movimiento == "y" && primo  ){
-       //y'
-       this.y(false);
-     }else if (movimiento == "z" && !primo){
-       //z
-       this.z(true);
-     }else if (movimiento == "z" && primo){
-       //z'
-       this.z(false) ;
+     if ( movimiento == "x"  ){
+
+       this.x(primo) ;
+
+     } else if (movimiento == "y" ){
+
+       this.y(primo);
+
+     }else if (movimiento == "z"){
+
+       this.z(primo) ;
      }
 
    }
  }
 
-   secuenciaMovimientos( secuencia ){
-
-      var movimientos = this.procesarSecuencia(secuencia) ;
-
-      for (var i = 0 ; i < movimientos.length  ; i++ ) {
-
-          var movimiento_a = movimientos[i].trim();
-          this.movimiento(movimiento_a);
-      }
-
-   }
-
    negadoMovimiento( movimiento ){
 
-     var partes = this.procesarMovimiento(movimiento) ;
+     var partes = this.procesarTransfomacion(movimiento) ;
 
      var repeticiones = partes[0] ;
      var movimiento = partes[1] ;
@@ -402,10 +438,10 @@ class Cubo{
 
      var movimientos = this.procesarSecuencia(secuencia);
      var secuencia_negada = "" ;
-     for( var i =  movimientos.length ; i > 0 ; i--){
+     for( var i =  movimientos.length ; i > 1 ; i--){
         secuencia_negada = secuencia_negada+this.negadoMovimiento(movimientos[i-1])+" ,";
      }
-
+     secuencia_negada = secuencia_negada+this.negadoMovimiento(movimientos[0])
      return secuencia_negada ;
 
    }
@@ -471,14 +507,412 @@ class Cubo{
 
 // Giros
 
+  t(prima){
+
+    if( prima ){
+     this.Top = this.rotarMatrizN(this.Top , 1 ) ;
+    }else{
+      this.Top = this.rotarMatrizN(this.Top , 3 ) ;
+    }
+
+    var F = this.Front[0] ;
+    var B = this.Back[0] ;
+    var R = this.Right[0] ;
+    var L = this.Left[0] ;
+
+    if( prima ) {
+      //t'
+      this.Front[0] = L.reverse();
+      this.Left[0] = B;
+      this.Right[0] = F ;
+      this.Back[0] = R.reverse() ;
+
+    }else {
+      // t
+      this.Front[0] = R ;
+      this.Left[0] = F.reverse() ;
+      this.Right[0] = B.reverse()  ;
+      this.Back[0] = L ;
+
+    }
+
+
+
+  }
+
+  d(prima){
+
+    if( prima ){
+     this.Down = this.rotarMatrizN(this.Down , 1 ) ;
+    }else{
+      this.Down = this.rotarMatrizN(this.Down , 3) ;
+    }
+
+    var F = this.Front[2] ;
+    var B = this.Back[2] ;
+    var R = this.Right[2] ;
+    var L = this.Left[2] ;
+
+    if( prima ) {
+      //d'
+      this.Front[2] = L.reverse() ;
+      this.Left[2] = B ;
+      this.Right[2] = F ;
+      this.Back[2] = R .reverse();
+
+    }else {
+      // d
+      this.Front[2] = R ;
+      this.Left[2] = F.reverse() ;
+      this.Right[2] = B.reverse() ;
+      this.Back[2] = L ;
+
+    }
+
+
+  }
+
+  f(prima){
+
+    if( prima ){
+     this.Front = this.rotarMatrizN(this.Front , 3 ) ;
+    }else{
+      this.Front = this.rotarMatrizN(this.Front , 1 ) ;
+    }
+
+    var T = this.Top[0] ;
+    var D = this.Down[0] ;
+
+    var R0 = this.Right[0][0] ;
+    var R1 = this.Right[1][0] ;
+    var R2 = this.Right[2][0] ;
+
+    var L0 = this.Left[0][0] ;
+    var L1 = this.Left[1][0] ;
+    var L2 = this.Left[2][0] ;
+
+    if(prima){
+      //f'
+      this.Top[0] = [  R0 , R1 , R2 ] ;
+      this.Down[0] = [  L0 , L1 , L2 ]  ;
+
+      this.Right[0][0] = D[2] ;
+      this.Right[1][0] = D[1] ;
+      this.Right[2][0] = D[0] ;
+
+      this.Left[0][0] = T[2] ;
+      this.Left[1][0] = T[1] ;
+      this.Left[2][0] = T[0] ;
+
+    }else{
+      //f
+      this.Top[0] = [ L2 , L1 , L0 ] ;
+      this.Down[0] = [ R2 , R1 , R0 ] ;
+
+      this.Right[0][0] = T[0] ;
+      this.Right[1][0] = T[1] ;
+      this.Right[2][0] = T[2] ;
+
+      this.Left[0][0] = D[0] ;
+      this.Left[1][0] = D[1] ;
+      this.Left[2][0] = D[2] ;
+
+    }
+
+
+  }
+
+  b(prima){
+
+    if( prima ){
+      this.Back = this.rotarMatrizN(this.Back , 3 ) ;
+    }else{
+      this.Back = this.rotarMatrizN(this.Back , 1 ) ;
+    }
+
+    var T = this.Top[2] ;
+    var D = this.Down[2] ;
+
+    var R0 = this.Right[0][2] ;
+    var R1 = this.Right[1][2] ;
+    var R2 = this.Right[2][2] ;
+
+    var L0 = this.Left[0][2] ;
+    var L1 = this.Left[1][2] ;
+    var L2 = this.Left[2][2] ;
+
+    if(prima){
+      //f'
+      this.Top[2] = [  R0 , R1 , R2 ] ;
+      this.Down[2] = [  L0 , L1 , L2 ]  ;
+
+      this.Right[0][2] = D[2] ;
+      this.Right[1][2] = D[1] ;
+      this.Right[2][2] = D[0] ;
+
+      this.Left[0][2] = T[2] ;
+      this.Left[1][2] = T[1] ;
+      this.Left[2][2] = T[0] ;
+
+    }else{
+      //f
+      this.Top[2] = [ L2 , L1 , L0 ] ;
+      this.Down[2] = [ R2 , R1 , R0 ] ;
+
+      this.Right[0][2] = T[0] ;
+      this.Right[1][2] = T[1] ;
+      this.Right[2][2] = T[2] ;
+
+      this.Left[0][2] = D[0] ;
+      this.Left[1][2] = D[1] ;
+      this.Left[2][2] = D[2] ;
+
+    }
+
+
+  }
+
+  r(prima){
+
+    if( prima ){
+     this.Right = this.rotarMatrizN(this.Right , 3 ) ;
+    }else{
+      this.Right = this.rotarMatrizN(this.Right , 1 ) ;
+    }
+
+    var F = [] ;
+    var T = [] ;
+    var D = [];
+    var B = [] ;
+
+    for (var i = 0 ; i < 3  ; i++ ){
+
+        F.push(this.Front[i][2]) ;
+        T.push(this.Top[i][2] );
+        D.push(this.Down[i][2] ) ;
+        B.push(this.Back[i][2] );
+
+        }
+
+    for (var i = 0 ; i < 3 ; i++ ) {
+        if (prima){
+
+          this.Top[i][2] = B[i] ;
+          this.Front[i][2] = T[2-i] ;
+          this.Down[i][2] = F[i] ;
+          this.Back[i][2] = D[2-i] ;
+
+        }else {
+
+          this.Top[i][2] = F[2-i] ;
+
+          this.Front[i][2] = D[i] ;
+
+          this.Down[i][2] = B[2-i] ;
+
+          this.Back[i][2] = T[i] ;
+
+
+
+
+
+    }
+  }
+
+  }
+
+  l(prima){
+
+    if( prima ){
+     this.Left = this.rotarMatrizN(this.Left , 3 ) ;
+    }else{
+      this.Left = this.rotarMatrizN(this.Left , 1 ) ;
+    }
+
+    var F = [] ;
+    var T = [] ;
+    var D = [];
+    var B = [] ;
+
+    for (var i = 0 ; i < 3  ; i++ ){
+
+        F.push(this.Front[i][0]) ;
+        T.push(this.Top[i][0] );
+        D.push(this.Down[i][0] ) ;
+        B.push(this.Back[i][0] );
+
+        }
+
+    for (var i = 0 ; i < 3 ; i++ ) {
+        if (prima){
+
+          this.Top[i][0] = B[i] ;
+          this.Front[i][0] = T[2-i] ;
+          this.Down[i][0] = F[i] ;
+          this.Back[i][0] = D[2-i] ;
+
+        }else {
+
+          this.Top[i][0] = F[2-i] ;
+
+          this.Front[i][0] = D[i] ;
+
+          this.Down[i][0] = B[2-i] ;
+
+          this.Back[i][0] = T[i] ;
+
+        }
+
+      }
+
+
+
+
+  }
+
+  aplicarGiro(giro){
+
+    var partes = this.procesarTransfomacion(giro) ;
+
+    var repeticiones = partes[0] ;
+    var giro = partes[1] ;
+    var primo = partes[2] ;
+
+    for (var i = 0 ;  i < repeticiones ; i++ ){
+
+      if ( giro == "t" ){
+        //t
+        this.t(primo) ;
+      } else if (giro == "d"  ){
+        //t'
+        this.d(primo) ;
+      } else if (giro == "f" ){
+        //y
+        this.f(primo);
+      }else if (giro == "b"  ){
+        //y'
+        this.b(primo);
+      }else if (giro == "r" ){
+        //z
+        this.r(primo);
+      }else if (giro == "l" ){
+        //z'
+        this.l(primo) ;
+      }
+
+    }
+
+  }
+
+  giroAleatorio(){
+
+        var R1 = Math.random() ;
+        var R2 = Math.random() ;
+        var R3 = Math.random() ;
+
+        var movimiento = "" ;
+        var repeticiones = "" ;
+        var primo = "" ;
+
+        if ( R1 < 1/6 ){
+           movimiento = "t" ;
+        }else if( R1 < 2/6 ){
+           movimiento = "d" ;
+        }
+        else if( R1 < 3/6 ){
+           movimiento = "f" ;
+        }   else if( R1 < 4/6 ){
+             movimiento = "b" ;
+        }  else if( R1 < 5/6 ){
+             movimiento = "r" ;
+        }  else {
+             movimiento = "l" ;
+        }
+
+        if ( R2 < 1/3 ){
+           repeticiones = "1" ;
+        }else if( R2 < 2/3 ){
+           repeticiones = "2" ;
+        }else {
+           repeticiones = "3" ;
+        }
+
+        if (R3 < 1/2) {
+           primo="'" ;
+        }else{
+           primo="" ;
+        }
+
+        var movimiento_r = repeticiones+movimiento+primo ;
+        return movimiento_r ;
+
+
+  }
+
+  secuenciaGirosAleatorios(n){
+
+    var secuencia = "" ;
+    for( var i = 0 ; i < n - 1 ; i++){
+       secuencia = secuencia+this.giroAleatorio()+" ,";
+    }
+    secuencia = secuencia+this.giroAleatorio() ;
+    return secuencia ;
+  }
+
+  negadoGiro(giro){
+
+    var partes = this.procesarTransfomacion(giro) ;
+    var giro = partes[1].trim() ;
+    var prima = partes[2] ;
+    if (prima){
+      giro=giro+"'";
+    }
+
+    var giros =   ["t" ,"d" ,"f" ,"b" ,"r" ,"l" ] ;
+    var negados = ["t'","d'","f'","b'","r'","l'"] ;
+
+    var negado = "" ;
+    for ( var i = 0 ; i < giros.length ; i++ ){
+
+         if( giro == giros[i] ){
+            negado = negados[i];
+            break ;
+
+         }else if(giro == negados[i]){
+             negado = giros[i] ;
+             break ;
+
+         }else {
+
+           negado=negado;
+         }
+    }
+
+    return partes[0]+negado ;
+
+  }
+
+  secuenciaNegadaGiros(secuencia){
+    var movimientos = this.procesarSecuencia(secuencia);
+    var secuencia_negada = "" ;
+    for( var i =  movimientos.length ; i > 1 ; i--){
+       secuencia_negada = secuencia_negada+this.negadoGiro(movimientos[i-1])+" ,";
+    }
+    secuencia_negada = secuencia_negada+this.negadoGiro(movimientos[0])
+    return secuencia_negada ;
+
+  }
+
+// Algoritmo
+
   dibujar(){
 
-    this.plano4.colorear(this.Front,0) ;
-    this.plano5.colorear(this.Left,0) ;
-    this.plano3.colorear(this.Top,0) ;
-    this.plano1.colorear(this.Back,0) ;
-    this.plano2.colorear(this.Right,0) ;
+    this.plano4.colorear(this.Front,1) ;
+    this.plano3.colorear(this.Top,2) ;
+    this.plano1.colorear(this.Back,3) ;
+    this.plano2.colorear(this.Right,3) ;
     this.plano6.colorear(this.Down,0) ;
+    this.plano5.colorear(this.Left,1) ;
 
 
     this.plano1.dibujar() ;
@@ -515,14 +949,13 @@ function dibujarEjes(){
 var easycam ;
 var cubo = new Cubo() ;
 
-secuencia = cubo.secuenciaMovimientosAletorios(5);
-negada = cubo.secuenciaNegada(secuencia);
+var secuencia = cubo.secuenciaGirosAleatorios(3);
+var negada = cubo.secuenciaNegadaGiros(secuencia) ;
 
-console.log(secuencia);
+cubo.aplicarSecuenciaTransformaciones(secuencia);
+//cubo.aplicarSecuenciaTransformaciones(negada);
+
 console.log(negada);
-
-cubo.secuenciaMovimientos(secuencia);
-cubo.secuenciaMovimientos(negada);
 
 function setup() {
   createCanvas(800, 800 , WEBGL);
@@ -538,6 +971,7 @@ function draw() {
 
   translate(-100,-100,-100);
   cubo.dibujar() ;
+
 
 
 
