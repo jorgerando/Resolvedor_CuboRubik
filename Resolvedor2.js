@@ -316,16 +316,19 @@ class Cubo{
 
      if(!prima){
       // z
+
+      this.Top =this.rotarMatrizN(this.Top ,3);
+
       this.Front = R ;
       this.Right = this.reflexionYMatriz(B);
       this.Back = L ;
       this.Left =  this.reflexionYMatriz(F);
 
-
-
-
      }else {
       // z'
+
+      this.Top = this.rotarMatrizN(this.Top,1);
+
       this.Front = this.reflexionYMatriz(L) ;
       this.Right = F ;
       this.Back = this.reflexionYMatriz(R) ;
@@ -348,6 +351,8 @@ class Cubo{
 
      if(!prima){
       // x
+      this.Right = this.rotarMatrizN(this.Right,1)
+
       this.Top = this.reflexionXMatriz(F) ;
       this.Front = D ;
       this.Down = this.reflexionXMatriz(B) ;
@@ -355,6 +360,8 @@ class Cubo{
 
      }else {
       // x'
+      this.Right = this.rotarMatrizN(this.Right,3)
+
       this.Top = B ;
       this.Front = this.reflexionXMatriz(T) ;
       this.Down = F ;
@@ -378,6 +385,9 @@ class Cubo{
 
      if(!prima){
       // y
+
+      this.Front = this.rotarMatriz(this.Front,1)
+
       this.Top =  this.rotarMatrizN(L,1) ;
       this.Right = this.reflexionYMatriz(this.rotarMatrizN(T,1)) ;
       this.Down = this.rotarMatrizN(R,1) ;
@@ -385,6 +395,9 @@ class Cubo{
 
      }else {
       // y'
+
+      this.Front = this.rotarMatriz(this.Front,3)
+
       this.Top =  this.reflexionYMatriz(this.rotarMatrizN(R,1))  ;
       this.Right = this.rotarMatrizN(D,3) ;
       this.Down = this.reflexionYMatriz(this.rotarMatrizN(L,1)) ;
@@ -979,7 +992,8 @@ var cubo = new Cubo() ;
 //var negada = cubo.secuenciaNegadaGiros(secuencia) ;
 
 
-//cubo.aplicarSecuenciaTransformaciones(" ");
+cubo.aplicarSecuenciaTransformaciones(" r , 3y ");
+
 //cubo.aplicarSecuenciaTransformaciones(negada);
 
 
