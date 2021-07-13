@@ -213,6 +213,7 @@ class Cubo{
      return B ;
   }
 
+
 // transfomaciones
 
   procesarTransfomacion( movimientos){
@@ -300,6 +301,25 @@ class Cubo{
 
   }
 
+  secuenciaAleatoria(n){
+    var secuencia = "" ;
+    for (var i = 0 ; i < n - 1; i++ ){
+      var R  = Math.random()
+      if( R*100 < 50){
+           secuencia= secuencia + this.giroAleatorio()+",";
+      }else{
+           secuencia= secuencia +this.movimientoAleatorio()+",";
+      }
+    }
+    var R  = Math.random()
+    if( R*100 < 75){
+         secuencia= secuencia + this.giroAleatorio();
+    }else{
+         secuencia= secuencia +this.movimientoAleatorio();
+    }
+    return secuencia
+  }
+
 
 // Movimientos
 
@@ -318,6 +338,7 @@ class Cubo{
       // z
 
       this.Top =this.rotarMatrizN(this.Top ,3);
+      this.Down = this.rotarMatrizN(this.Down,3);
 
       this.Front = R ;
       this.Right = this.reflexionYMatriz(B);
@@ -328,6 +349,7 @@ class Cubo{
       // z'
 
       this.Top = this.rotarMatrizN(this.Top,1);
+      this.Down = this.rotarMatrizN(this.Down,1);
 
       this.Front = this.reflexionYMatriz(L) ;
       this.Right = F ;
@@ -352,6 +374,7 @@ class Cubo{
      if(!prima){
       // x
       this.Right = this.rotarMatrizN(this.Right,1)
+      this.Left = this.rotarMatrizN(this.Left,1);
 
       this.Top = this.reflexionXMatriz(F) ;
       this.Front = D ;
@@ -361,6 +384,7 @@ class Cubo{
      }else {
       // x'
       this.Right = this.rotarMatrizN(this.Right,3)
+      this.Left = this.rotarMatrizN(this.Left,3);
 
       this.Top = B ;
       this.Front = this.reflexionXMatriz(T) ;
@@ -386,7 +410,8 @@ class Cubo{
      if(!prima){
       // y
 
-      this.Front = this.rotarMatriz(this.Front,1)
+      this.Front = this.rotarMatrizN(this.Front,1)
+      this.Back = this.rotarMatrizN(this.Back,1)
 
       this.Top =  this.rotarMatrizN(L,1) ;
       this.Right = this.reflexionYMatriz(this.rotarMatrizN(T,1)) ;
@@ -396,7 +421,8 @@ class Cubo{
      }else {
       // y'
 
-      this.Front = this.rotarMatriz(this.Front,3)
+      this.Front = this.rotarMatrizN(this.Front,3)
+        this.Back = this.rotarMatrizN(this.Back,3)
 
       this.Top =  this.reflexionYMatriz(this.rotarMatrizN(R,1))  ;
       this.Right = this.rotarMatrizN(D,3) ;
@@ -988,13 +1014,14 @@ function dibujarEjes(){
 var easycam ;
 var cubo = new Cubo() ;
 
-//var secuencia = cubo.secuenciaGirosAleatorios(3);
+var secuencia = cubo.secuenciaAleatoria(20);
 //var negada = cubo.secuenciaNegadaGiros(secuencia) ;
+console.log(secuencia)
+
+cubo.aplicarSecuenciaTransformaciones(secuencia);
 
 
-cubo.aplicarSecuenciaTransformaciones(" r , 3y ");
 
-//cubo.aplicarSecuenciaTransformaciones(negada);
 
 
 
