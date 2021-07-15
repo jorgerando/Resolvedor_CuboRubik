@@ -125,6 +125,140 @@ class Plano{
 
 }
 
+class Arista{
+
+  constructor(CA , CB , CoA , CoB ){
+
+    this.caraA = CA ;
+    this.caraB = CB ;
+
+    this.ColorA = CoA ;
+    this.ColorB = CoB ;
+
+    this.caras = [ this.caraA , this.caraB ] ;
+    this.colores = [ this.ColorA , this.ColorB ] ;
+
+  }
+
+  devolverCaras(){
+    var caras = this.caras ;
+    return caras ;
+  }
+
+  devolverColores(){
+    var colores = this.colores ;
+    return colores ;
+
+  }
+
+  actualizarArista(CA , CB , CoA , CoB){
+
+    this.caraA = CA ;
+    this.caraB = CB ;
+
+    this.ColorA = CoA ;
+    this.ColorB = CoB ;
+
+    this.caras = [ this.caraA , this.caraB ] ;
+    this.colores = [ this.ColorA , this.ColorB ] ;
+
+
+  }
+
+  tieneElColor(color){
+    return this.ColorA == color || this.ColorB == color ;
+
+  }
+
+  tieneLosColores(cA,cB){
+    return this.ColorA == cA && this.ColorB == cB ;
+  }
+
+  estaEnEstaCara(cara){
+    return this.caraA == cara || this.caraB == cara ;
+  }
+
+  estaEnEstasCara(cA , cB){
+    return this.caraA == cA && this.caraB == cB ;
+  }
+
+}
+
+class Esquina{
+
+   constructor(CA,CB,CC,colorA,colorB,colorC){
+
+     this.caraA = CA ;
+     this.caraB = CB ;
+     this.caraC = CC ;
+
+     this.colorA = colorA ;
+     this.colorB = colorB ;
+     this.colorC = colorC ;
+
+     this.colores = [ this.colorA , this.colorB , this. colorC ] ;
+     this.caras = [this.caraA , this.caraB , this. caraC ] ;
+
+   }
+
+   devolverCaras(){
+     var c = this.caras ;
+     return c ;
+   }
+
+   actualizarEsquina(CA,CB,CC,colorA,colorB,colorC){
+     this.caraA = CA ;
+     this.caraB = CB ;
+     this.caraC = CC ;
+
+     this.colorA = colorA ;
+     this.colorB = colorB ;
+     this.colorC = colorC ;
+
+     this.colores = [ this.colorA , this.colorB , this. colorC ] ;
+     this.caras = [this.caraA , this.caraB , this. caraC ] ;
+
+   }
+
+   devolverColores(){
+     var c = this.colores ;
+     return c ;
+
+   }
+
+   tieneElColor(color){
+
+     return this.colorA == color || this.colorB == color || this.colorC == color ;
+
+   }
+
+   tieneLos2Colores(A,B){
+
+     return this.tieneElColor(A) && this.tieneElColor(B) ;
+
+   }
+
+   tieneLosColores(A,B,C){
+     return tieneElColor(A) && tieneElColor(B) && tieneElColor(C) ;
+   }
+
+   estaEnLaCara(cara){
+
+     return this.caraA == cara || this.caraB == cara || this.caraC == cara ;
+
+   }
+
+   estaEnLas2Caras(A,B){
+
+     return this.estaEnLaCara(A) && this.estaEnLaCara(B) ;
+   }
+
+   estaEnLasCaras(A,B,C){
+     return this.estaEnLaCara(A) && this.estaEnLaCara(B) && this.estaEnLaCara(C) ;
+   }
+
+}
+
 class Cubo{
 
   constructor(){
@@ -132,6 +266,7 @@ class Cubo{
     this.inicializarColores();
     this.inicializarPlanos() ;
     this.inicializarSecuenciaImportatesMovimientos() ;
+    this.inicializarNombreCaras();
 
     //inicializo la posiciones de relativas de las cara
 
@@ -139,12 +274,81 @@ class Cubo{
     this.Back = [ [this.naranja,this.naranja,this.naranja] , [this.naranja,this.naranja,this.naranja] ,[this.naranja,this.naranja,this.naranja]  ]
 
     this.Left = [ [this.azul ,this.azul ,this.azul] , [this.azul ,this.azul ,this.azul] ,[this.azul ,this.azul ,this.azul] ] ;
-    this.Right = [ [this.verde ,this.verde,this.verde] , [this.verde ,this.verde ,this.verde] ,[this.verde ,this.verde ,this.verde] ] ;
+    this.Right = [ [this.verde ,this.verde,this.verde] , [this.verde ,this.verde ,this.verde] ,[this.verde ,this.verde ,this.verde ] ] ;
 
     this.Down = [ [this.blanco ,this.blanco,this.blanco] ,[this.blanco ,this.blanco,this.blanco] ,[this.blanco ,this.blanco,this.blanco]  ] ;
-    this.Top = [ [this.amarillo,this.amarillo,this.amarillo] , [this.amarillo,this.amarillo,this.amarillo] ,[this.amarillo,this.amarillo,this.amarillo]] ;
+    this.Top = [ [this.amarillo ,this.amarillo,this.amarillo] , [this.amarillo,this.amarillo,this.amarillo] ,[this.amarillo,this.amarillo,this.amarillo]] ;
+
+    // Esquinas
+
+    this.EF1 = new Esquina(this.F,this.L,this.T,this.Front[0][0],this.Left[0][0],this.Top[0][0]) ; // check
+    this.EF2 = new Esquina(this.F,this.R,this.T,this.Front[0][2],this.Right[0][0],this.Top[0][2]) ; // chek
+    this.EF3 = new Esquina(this.F,this.L,this.D,this.Front[2][0],this.Left[2][0],this.Down[0][0]) ; //check
+    this.EF4 = new Esquina(this.F,this.R,this.D,this.Front[2][2],this.Right[2][0],this.Down[0][2]) ; // check
+
+    this.EB1 = new Esquina(this.B,this.L,this.T,this.Back[0][0],this.Left[0][2],this.Top[2][0] ) ; // check
+    this.EB2 = new Esquina(this.B,this.R,this.T,this.Back[0][2],this.Right[0][2],this.Top[2][2] ) ; // check
+    this.EB3 = new Esquina(this.B,this.L,this.D,this.Back[2][0],this.Left[2][2],this.Down[2][0] ) ; //chek
+    this.EB4 = new Esquina(this.B,this.R,this.D,this.Back[2][2],this.Right[2][2],this.Down[2][2] ) ; //chek
+
+    this.esquinas = [ this.EF1 , this.EF2 , this.EF3 , this.EF4 , this.EB1 , this.EB2 , this.EB3 , this.EB4 ] ;
+
+    // Aristas
+
+    this.A1 = new Arista( this.F , this.T , this.Front[0][1] , this.Top[0][1]   ) ; //chek
+    this.A2 = new Arista( this.F , this.R , this.Front[1][2] , this.Right[1][0] ) ; //chek
+    this.A3 = new Arista( this.F , this.D , this.Front[2][1] , this.Down[0][1]  ) ; //chek
+    this.A4 = new Arista( this.F , this.L , this.Front[1][0] , this.Left[1][0]  ) ; //chek
+
+    this.A5 = new Arista( this.T , this.L , this.Top[1][0]  , this.Left[0][1]  ) ; //chek
+    this.A6 = new Arista( this.T , this.R , this.Top[2][1]  , this.Right[0][1] ) ; //chek
+    this.A7 = new Arista( this.D , this.R , this.Down[1][2] , this.Right[2][1] ) ; //chek
+    this.A8 = new Arista( this.D , this.L , this.Down[1][0] , this.Left[2][1]  ) ; //chek
+
+    this.A9  = new Arista( this.B , this.T , this.Back[0][1] , this.Top[2][1]   ) ; //chek
+    this.A10 = new Arista( this.B , this.R , this.Back[1][2] , this.Right[1][2] ) ; //chek
+    this.A11 = new Arista( this.B , this.D , this.Back[2][1] , this.Down[2][1]  ) ; //chek
+    this.A12 = new Arista( this.B , this.L , this.Back[1][0] , this.Left[1][2]  ) ;
+
+    this.aristas = [this.A1 , this.A2 , this.A3 , this.A4 ,this.A5 , this.A6 , this.A7 ,this.A8 , this.A9 , this.A10 , this.A11 , this.A12 ] ;
 
   }
+
+  actualizarEsquinas(){
+
+    this.EF1.actualizarEsquina(this.F,this.L,this.T,this.Front[0][0],this.Left[0][0],this.Top[0][0]) ; // check
+    this.EF2.actualizarEsquina(this.F,this.R,this.T,this.Front[0][2],this.Right[0][0],this.Top[0][2]) ; // chek
+    this.EF3.actualizarEsquina(this.F,this.L,this.D,this.Front[2][0],this.Left[2][0],this.Down[0][0]) ; //check
+    this.EF4.actualizarEsquina(this.F,this.R,this.D,this.Front[2][2],this.Right[2][0],this.Down[0][2]) ;
+
+    this.EB1.actualizarEsquina(this.B,this.L,this.T,this.Back[0][0],this.Left[0][2],this.Top[2][0] ) ; // check
+    this.EB2.actualizarEsquina(this.B,this.R,this.T,this.Back[0][2],this.Right[0][2],this.Top[2][2] ) ; // check
+    this.EB3.actualizarEsquina(this.B,this.L,this.D,this.Back[2][0],this.Left[2][2],this.Down[2][0] ) ; //chek
+    this.EB4.actualizarEsquina(this.B,this.R,this.D,this.Back[2][2],this.Right[2][2],this.Down[2][2] ) ;
+
+    this.esquinas = [ this.EF1 , this.EF2 , this.EF3 , this.EF4 , this.EB1 , this.EB2 , this.EB3 , this.EB4 ] ;
+
+  }
+
+  actualizarAristas(){
+
+    this.A1.actualizarArista( this.F , this.T , this.Front[0][1] , this.Top[0][1]   ) ;
+    this.A2.actualizarArista( this.F , this.R , this.Front[1][2] , this.Right[1][0] ) ;
+    this.A3.actualizarArista( this.F , this.D , this.Front[2][1] , this.Down[0][1]  ) ;
+    this.A4.actualizarArista( this.F , this.L , this.Front[1][0] , this.Left[1][0]  ) ;
+
+    this.A5.actualizarArista( this.T , this.L , this.Top[1][0]  , this.Left[0][1]  ) ;
+    this.A6.actualizarArista( this.T , this.R , this.Top[1][2]  , this.Right[0][1] ) ;
+    this.A7.actualizarArista( this.D , this.R , this.Down[1][2] , this.Right[2][1] ) ;
+    this.A8.actualizarArista( this.D , this.L , this.Down[1][0] , this.Left[2][1]  ) ;
+
+    this.A9.actualizarArista( this.B , this.T , this.Back[0][1] , this.Top[2][1]   ) ;
+    this.A10.actualizarArista( this.B , this.R , this.Back[1][2] , this.Right[1][2] ) ;
+    this.A11.actualizarArista( this.B , this.D , this.Back[2][1] , this.Down[2][1]  ) ;
+    this.A12.actualizarArista( this.B , this.L , this.Back[1][0] , this.Left[1][2]  ) ;
+
+  }
+
 
   inicializarColores(){
 
@@ -157,6 +361,24 @@ class Cubo{
 
   }
 
+  rgbColor(color){
+     var c = "" ;
+     if ( this.rojo == color ){
+        c = "rojo"
+     } else if ( this.azul == color){
+        c = "azul"
+     } else if ( this.blanco == color ){
+        c = "blanco"
+     } else if( this.amarillo == color ){
+        c = "amarillo"
+     }else if (this.naranja == color){
+        c = "naranja"
+     }else if(this.verde == color){
+        c = "verde"
+     }
+     return c ;
+  }
+
   inicializarPlanos(){
 
     var lado = 200 ;
@@ -167,6 +389,20 @@ class Cubo{
     this.plano4 = new Plano(lado , new p5.Vector(lado,lado,lado) ,new p5.Vector(-1,0,0) , new p5.Vector(0,-1,0) ) ;
     this.plano5 = new Plano(lado , new p5.Vector(lado,lado,lado) ,new p5.Vector(-1,0,0) , new p5.Vector(0,0,-1) ) ;
     this.plano6 = new Plano(lado , new p5.Vector(lado,lado,lado) ,new p5.Vector(0,-1,0) , new p5.Vector(0,0,-1) ) ;
+
+  }
+
+  inicializarNombreCaras(){
+
+    this.F = "Front" ;
+    this.D = "Down" ;
+
+    this.L = "Left" ;
+    this.R = "Right" ;
+
+    this.B = "Back" ;
+    this.T = "Top" ;
+
 
   }
 
@@ -212,9 +448,6 @@ class Cubo{
      var B = this.reflexionXMatriz(A) ;
      return B ;
   }
-
-
-// transfomaciones
 
   procesarTransfomacion( movimientos){
 
@@ -288,6 +521,9 @@ class Cubo{
 
         this.aplicarGiro(trans_a);
        }
+
+       this.actualizarEsquinas();
+       this.actualizarAristas();
    }
 
 }
@@ -320,6 +556,55 @@ class Cubo{
     return secuencia
   }
 
+// Busqueda
+
+  coloresEsquina(n){
+   var esquina  = this.esquinas[n-1] ;
+   return esquina.devolverColores() ;
+
+  }
+
+  verEsquina(n){
+
+    var esquina  = this.esquinas[n-1] ;
+    var colores = esquina.devolverColores() ;
+    var caras = esquina.devolverCaras() ;
+
+    var s_c = "" ;
+    var s_ca = "" ;
+
+    for ( var i = 0 ; i < colores.length ; i++ ){
+        s_c= s_c +" "+this.rgbColor(colores[i])
+        s_ca=s_ca+" "+caras[i];
+    }
+    console.log(" Esquina : "+n+" { Colores : "+s_c+" | Cara : "+s_ca+" }" );
+
+  }
+
+  verArista(n){
+
+    var arista = this.aristas[n-1]
+    var colores = arista.devolverColores() ;
+    var caras = arista.devolverCaras();
+
+    var s_c = "" ;
+    var s_ca = "" ;
+
+    for ( var i = 0 ; i < colores.length ; i++ ){
+        s_c= s_c +" "+this.rgbColor(colores[i])
+        s_ca=s_ca+" "+caras[i];
+    }
+    console.log(" Arista : "+n+" { Colores : "+s_c+" | Cara : "+s_ca+" }" );
+
+  }
+
+  carasEsquina(n){
+     var caras = this.esquinas[n-1].caras() ;
+     return caras
+
+  }
+
+//----- Transfomaciones -------
 
 // Movimientos
 
@@ -968,7 +1253,7 @@ class Cubo{
 
   }
 
-// Algoritmo
+// ---- Algoritmo ---
 
   dibujar(){
 
@@ -1015,15 +1300,13 @@ var easycam ;
 var cubo = new Cubo() ;
 
 var secuencia = cubo.secuenciaAleatoria(20);
-//var negada = cubo.secuenciaNegadaGiros(secuencia) ;
 console.log(secuencia)
 
 cubo.aplicarSecuenciaTransformaciones(secuencia);
 
-
-
-
-
+for( var i = 0 ; i < 12 ; i++ ){
+  cubo.verArista(i+1)
+}
 
 function setup() {
   createCanvas(800, 800 , WEBGL);
