@@ -372,6 +372,84 @@ class Cubo{
 
   }
 
+  resetear(){
+    this.inicializarColores();
+    this.inicializarPlanos() ;
+    this.inicializarSecuenciaImportatesMovimientos() ;
+    this.inicializarNombreCaras();
+
+    // cara
+
+    this.Front = [ [this.rojo,this.rojo,this.rojo] , [this.rojo,this.rojo,this.rojo] , [this.rojo,this.rojo,this.rojo] ] ;
+    this.Back = [ [this.naranja,this.naranja,this.naranja] , [this.naranja,this.naranja,this.naranja] ,[this.naranja,this.naranja,this.naranja]  ]
+
+    this.Left = [ [this.azul ,this.azul ,this.azul] , [this.azul ,this.azul ,this.azul] ,[this.azul ,this.azul ,this.azul] ] ;
+    this.Right = [ [this.verde ,this.verde,this.verde] , [this.verde ,this.verde ,this.verde] ,[this.verde ,this.verde ,this.verde ] ] ;
+
+    this.Down = [ [this.blanco ,this.blanco,this.blanco] ,[this.blanco ,this.blanco,this.blanco] ,[this.blanco ,this.blanco,this.blanco]  ] ;
+    this.Top = [ [this.amarillo ,this.amarillo,this.amarillo] , [this.amarillo,this.amarillo,this.amarillo] ,[this.amarillo,this.amarillo,this.amarillo]] ;
+
+    this.nombre_caras = [ this.F , this.B , this.L , this.R , this.D , this.T ] ;
+    this.caras = [ this.Front , this.Back , this.Left , this.Right , this.Down , this.Top ] ;
+
+    // Esquinas
+
+    this.EF1 = new Esquina(this.F,this.L,this.T,this.Front[0][0],this.Left[0][0],this.Top[0][0]  ,"E1") ; // check
+    this.EF1.asociarOrientacion([0,0],[0,0],[0,0]);
+    this.EF2 = new Esquina(this.F,this.R,this.T,this.Front[0][2],this.Right[0][0],this.Top[0][2] ,"E2") ; // chek
+    this.EF2.asociarOrientacion([0,2],[0,0],[0,2]);
+    this.EF3 = new Esquina(this.F,this.L,this.D,this.Front[2][0],this.Left[2][0],this.Down[0][0] ,"E3") ; //check
+    this.EF3.asociarOrientacion([2,0],[2,0],[0,0]);
+    this.EF4 = new Esquina(this.F,this.R,this.D,this.Front[2][2],this.Right[2][0],this.Down[0][2] ,"E4") ; // check
+    this.EF4.asociarOrientacion([2,2],[2,0],[0,2]);
+
+    this.EB1 = new Esquina(this.B,this.L,this.T,this.Back[0][0],this.Left[0][2],this.Top[2][0] ,"E5") ; // check
+    this.EB1.asociarOrientacion([0,0],[0,2],[2,0]);
+    this.EB2 = new Esquina(this.B,this.R,this.T,this.Back[0][2],this.Right[0][2],this.Top[2][2] ,"E6") ; // check
+    this.EB2.asociarOrientacion([0,2],[0,2],[2,2]);
+    this.EB3 = new Esquina(this.B,this.L,this.D,this.Back[2][0],this.Left[2][2],this.Down[2][0] ,"E7") ; //chek
+    this.EB3.asociarOrientacion([2,0],[2,2],[2,0]);
+    this.EB4 = new Esquina(this.B,this.R,this.D,this.Back[2][2],this.Right[2][2],this.Down[2][2] ,"E8") ; //chek
+    this.EB4.asociarOrientacion([2,2],[2,2],[2,2]);
+
+    this.esquinas = [ this.EF1 , this.EF2 , this.EF3 , this.EF4 , this.EB1 , this.EB2 , this.EB3 , this.EB4 ] ;
+    this.coloresEsquinas = [ [this.amarillo , this.rojo , this.azul] , [ this.amarillo , this.verde , this.rojo ] , [this.rojo ,this.blanco,this.azul ] , [this.rojo,this.verde,this.blanco] , [ this.amarillo , this.azul , this.naranja ] , [this.amarillo,this.verde,this.naranja] , [this.naranja,this.azul,this.blanco] , [ this.naranja , this.verde , this.blanco ] ] ;
+
+    // Aristas
+
+    this.A1 = new Arista( this.F , this.T , this.Front[0][1] , this.Top[0][1] , "A1"  ) ; //chek
+    this.A1.asociarOrientacion([0,1],[0,1]);
+    this.A2 = new Arista( this.F , this.R , this.Front[1][2] , this.Right[1][0],"A2" ) ; //chek
+    this.A2.asociarOrientacion([1,2],[1,0]);
+    this.A3 = new Arista( this.F , this.D , this.Front[2][1] , this.Down[0][1] ,"A3" ) ; //chek
+    this.A3.asociarOrientacion([2,1],[0,1]);
+    this.A4 = new Arista( this.F , this.L , this.Front[1][0] , this.Left[1][0] ,"A4" ) ; //chek
+    this.A4.asociarOrientacion([1,0],[1,0]);
+
+    this.A5 = new Arista( this.T , this.L , this.Top[1][0]  , this.Left[0][1]  ,"A5") ; //chek
+    this.A5.asociarOrientacion([1,0],[0,1]);
+    this.A6 = new Arista( this.T , this.R , this.Top[2][1]  , this.Right[0][1] ,"A6") ; //chek <------------
+    this.A6.asociarOrientacion([2,1],[0,1]);
+    this.A7 = new Arista( this.D , this.R , this.Down[1][2] , this.Right[2][1] ,"A7") ; //chek
+    this.A7.asociarOrientacion([1,2],[2,1]);
+    this.A8 = new Arista( this.D , this.L , this.Down[1][0] , this.Left[2][1]  ,"A8") ; //chek
+    this.A8.asociarOrientacion([1,0],[2,1]);
+
+    this.A9  = new Arista( this.B , this.T , this.Back[0][1] , this.Top[2][1]   ,"A9") ; //chek <-------------
+    this.A9.asociarOrientacion([0,1],[2,1]);
+    this.A10 = new Arista( this.B , this.R , this.Back[1][2] , this.Right[1][2] ,"A10") ; //chek
+    this.A10.asociarOrientacion([1,2],[1,2]);
+    this.A11 = new Arista( this.B , this.D , this.Back[2][1] , this.Down[2][1]  ,"A11") ; //chek
+    this.A11.asociarOrientacion([2,1],[2,1]);
+    this.A12 = new Arista( this.B , this.L , this.Back[1][0] , this.Left[1][2]  ,"A12") ; //chek
+    this.A12.asociarOrientacion([1,0],[1,2]);
+
+    this.aristas = [this.A1 , this.A2 , this.A3 , this.A4 ,this.A5 , this.A6 , this.A7 ,this.A8 , this.A9 , this.A10 , this.A11 , this.A12 ] ;
+    this.coloresAristas = [ [this.rojo , this.amarillo ] , [this.rojo,this.verde] , [this.rojo,this.blanco] , [this.rojo,this.azul] ,[this.amarillo,this.azul] , [this.amarillo,this.verde] , [this.verde,this.blanco] , [this.azul,this.blanco] ,[this.amarillo,this.naranja] , [this.verde,this.naranja] , [this.blanco,this.naranja] , [this.naranja,this.azul] ] ;
+
+
+  }
+
   actualizarEsquinas(){
 
     this.EF1.actualizarEsquina(this.F,this.L,this.T,this.Front[0][0],this.Left[0][0],this.Top[0][0]) ; // check
@@ -857,6 +935,9 @@ class Cubo{
    }
 
    secuenciaNegada(secuencia){
+     if(secuencia == undefined || secuencia ==  "") {
+       return "" ;
+     }
 
      var movimientos = this.procesarSecuencia(secuencia);
      var secuencia_negada = "" ;
@@ -1356,9 +1437,6 @@ class Cubo{
 
    return bienColocada ;
 
-
-
-
    }
 
    aristaBienOrientada(n){
@@ -1621,7 +1699,7 @@ class Cubo{
    while( ! this.esquinaBienOrientada(3) ){
 
       this.aplicarSecuenciaTransformaciones(sexi_move);
-      algoritmo = this.concatenarSecuencia(algoritmo,al1);
+      algoritmo = this.concatenarSecuencia(algoritmo,sexi_move);
 
    }
    return algoritmo
@@ -1708,6 +1786,525 @@ colocarLado(colores){
 
  // Paso 4 : Cruz cara de arriba
 
+ detectarCruz(){
+   var condicion = this.amarillo == this.Top[1][0] && this.amarillo == this.Top[0][1] && this.amarillo == this.Top[2][1] && this.amarillo == this.Top[1][2] ;
+   return condicion ;
+ }
+
+ detectarLinea(){
+   var condicion = this.amarillo == this.Top[2][1] && this.amarillo == this.Top[0][1]   ;
+   var condicion2 = this.amarillo == this.Top[1][0] && this.amarillo == this.Top[1][2] ;
+
+  var estado = undefined ;
+  if (condicion2 ){
+     console.log("horizonta")
+     estado = true
+
+  }else if(condicion) {
+    console.log("Vertical")
+    estado = false ;
+  }
+
+
+   return [ condicion || condicion2 , estado ];
+ }
+
+ detectarL(){
+
+   var condicion1 = this.amarillo == this.Top[1][0] && this.amarillo == this.Top[2][1]
+   var condicion2 = this.amarillo == this.Top[2][1] && this.amarillo == this.Top[1][2]
+   var condicion3 = this.amarillo == this.Top[1][2] && this.amarillo == this.Top[0][1]
+   var condicion4 = this.amarillo == this.Top[1][0] && this.amarillo == this.Top[0][1]
+
+   var estado = 0 ;
+
+   if (condicion1){
+      estado = 1 ;
+
+   } else if(condicion2){
+      estado = 2 ;
+   } else if(condicion3){
+      estado = 3 ;
+   }else if(condicion4){
+      estado = 4 ;
+   }
+     console.log(estado)
+   return [condicion1 || condicion2 || condicion3 || condicion4 , estado ] ;
+ }
+
+ detectarPunto(){
+   var condicion = this.amarillo != this.Top[1][0] && this.amarillo != this.Top[0][1] && this.amarillo != this.Top[2][1] && this.amarillo != this.Top[1][2] ;
+   return condicion ;
+ }
+
+ hacerCruzTop(){
+
+  var cruz = this.detectarCruz();
+  var line = this.detectarLinea();
+  var l = this.detectarL();
+  var punto = this.detectarPunto();
+
+  var algoritmo = "" ;
+  var resolverLinea = "f,r,t,r',t',f'" ;
+  var resolverL = "f,t,r,t',r',f'" ;
+
+  if(cruz) {
+  console.log("Cruz") ;
+  algoritmo = algoritmo ;
+
+  }else if(line[0]){
+    console.log("Linea");
+    if(line[1]){
+       //horizonta
+       algoritmo = resolverLinea ;
+    }else{
+      //vertical
+      algoritmo = "t,"+resolverLinea ;
+
+    }
+
+  }else if(l[0]){
+     console.log("L");
+     var a = ""
+     if(l[1] == 2){
+        a = "t',";
+     }else if(l[1] == 3){
+        a = "2t," ;
+     }else if(l[1] == 4){
+        a = "t," ;
+     }else{
+       a  = "" ;
+     }
+
+     algoritmo=a+resolverL  ;
+
+  }else{
+   console.log("Punto");
+   algoritmo = resolverL+",t,"+resolverLinea ;
+
+  }
+  this.aplicarSecuenciaTransformaciones(algoritmo);
+  return algoritmo
+ }
+
+// Paso 5 : Colocar Centros
+
+todosCentrosBienColocados(){
+  var centros = [1,5,6,9] ;
+  for ( var i = 0 ; i < 4 ; i++ ){
+     if(!this.aristaBienColocada(centros[i])){
+        return false ;
+     }
+  }
+  return true ;
+}
+
+moviendoSeColocan(){
+  var secuencia = ""
+  var bien  = false ;
+  for(var i = 0 ; i < 4 ; i++){
+
+     if ( this.todosCentrosBienColocados()) {
+       bien = true ;
+     }
+     this.aplicarSecuenciaTransformaciones("t");
+     secuencia = this.concatenarSecuencia(secuencia,"t");
+  }
+
+   return bien  ;
+}
+
+colocarBien(){
+  var secuencia = ""
+  var bien  = false ;
+
+  for(var i = 0 ; i < 4 ; i++){
+
+     if ( this.todosCentrosBienColocados()) {
+       break ;
+     }
+     this.aplicarSecuenciaTransformaciones("t");
+     secuencia = this.concatenarSecuencia(secuencia,"t");
+  }
+
+   return secuencia  ;
+
+
+}
+
+cuantosCentroHayColocados(){
+  var centros = [1,5,6,9] ;
+  var contador = 0 ;
+  for(var i = 0 ; i < 4 ; i++){
+     if(this.aristaBienColocada(centros[i])){
+        contador = contador + 1 ;
+     }
+  }
+  return contador ;
+
+}
+
+sePuedeTenerUnCentroColcado(){
+
+  var secuencia = ""
+  var secuencia_negada = "" ;
+
+  var bien  = false ;
+
+  for(var i = 0 ; i < 4 ; i++){
+
+     if ( this.cuantosCentroHayColocados() == 1) {
+       bien = true ;
+       break ;
+     }
+     this.aplicarSecuenciaTransformaciones("t");
+     secuencia = this.concatenarSecuencia(secuencia,"t");
+     secuencia_negada = this.concatenarSecuencia(secuencia_negada,"t'");
+  }
+
+   this.aplicarSecuenciaTransformaciones(secuencia_negada);
+  return bien  ;
+
+}
+
+irAlCentro(){
+
+  var secuencia = ""
+  var bien  = false ;
+
+  // muevo hasta colocar el centro
+
+  for(var i = 0 ; i < 4 ; i++){
+
+     if ( this.cuantosCentroHayColocados() == 1) {
+       break ;
+     }
+     this.aplicarSecuenciaTransformaciones("t");
+     secuencia = this.concatenarSecuencia(secuencia,"t");
+  }
+
+
+  // cual es el centro colocado
+  var a = [1,5,6,9] ;
+  var p = ["","z'","z","2z"] ;
+  var centro = 0 ;
+
+  for(var i = 0 ; i < 4 ; i++){
+    if (this.aristaBienColocada(a[i]) ) {
+      centro = a[i] ;
+      break ;
+    }
+  }
+
+  // me muevo ha dicha arista
+  for(var i = 0 ; i < 4 ; i++){
+    if (a[i] ==  centro) {
+      this.aplicarSecuenciaTransformaciones(p[i]);
+      secuencia = this.concatenarSecuencia(secuencia,p[i]);
+      break ;
+    }
+  }
+
+
+  return  secuencia ;
+
+}
+
+colocarCentros(){
+  var colocar = "r,t,r',t,r,2t,r'"
+  var secuencia = "" ;
+  this.aplicarSecuenciaTransformaciones(colocar);
+  secuencia = this.concatenarSecuencia(secuencia,colocar);
+
+  if( this.Right[1][1] != this.Right[0][1] && this.Left[1][1] != this.Left[0][1] ){
+
+    this.aplicarSecuenciaTransformaciones(colocar);
+    secuencia = this.concatenarSecuencia(secuencia,colocar);
+  }
+
+  return secuencia ;
+
+}
+
+irCentroMalColocado(){
+
+  var secuencia = ""
+  var bien  = false ;
+
+  // muevo hasta colocar el centro
+
+  for(var i = 0 ; i < 4 ; i++){
+
+     if ( this.cuantosCentroHayColocados() == 2 ) {
+       break ;
+     }
+     this.aplicarSecuenciaTransformaciones("t");
+     secuencia = this.concatenarSecuencia(secuencia,"t");
+  }
+
+
+  // cual es el centro alcolocado
+  var a = [1,5,6,9] ;
+  var p = ["","z'","z","2z"] ;
+  var centro = 0 ;
+
+  for(var i = 0 ; i < 4 ; i++){
+    if (!this.aristaBienColocada(a[i]) ) {
+      centro = a[i] ;
+      break ;
+    }
+  }
+
+  // me muevo ha dicha arista
+  for(var i = 0 ; i < 4 ; i++){
+    if (a[i] ==  centro) {
+      this.aplicarSecuenciaTransformaciones(p[i]);
+      secuencia = this.concatenarSecuencia(secuencia,p[i]);
+      break ;
+    }
+  }
+
+
+  return  secuencia ;
+
+
+}
+
+irCaraRoja(){
+   var ir = ["","z" ,"2z" ,"z'"] ;
+   var colores = [this.rojo,this.azul,this.naranja,this.verde];
+
+   for(var i = 0 ; i < 4 ; i++){
+     if(this.Front[1][1] == colores[i]){
+     this.aplicarSecuenciaTransformaciones(ir[i]);
+     return ir[i] ;
+    }
+   }
+   return "" ;
+}
+
+hacerCentros(){
+
+  var algoritmo = "" ;
+
+  if(this.moviendoSeColocan()){
+    //console.log("Ya hecho");
+    var c = this.colocarBien();
+    var b = this.irCaraRoja();
+    return this.concatenarSecuencia(c,b);
+  }
+  if (this.sePuedeTenerUnCentroColcado()){
+    //console.log("UN CENTRO");
+    var a = this.irAlCentro();
+    var b = this.colocarCentros();
+    algoritmo = this.concatenarSecuencia(a,b);
+    var c = this.irCaraRoja();
+    algoritmo = this.concatenarSecuencia(algoritmo,c);
+    return algoritmo ;
+
+  }else{
+    //console.log("NADA");
+    var a = this.irCentroMalColocado();
+    this.aplicarSecuenciaTransformaciones("r,t,r',t,r,2t,r'");
+    var b = "r,t,r',t,r,2t,r'" ;
+    algoritmo = this.concatenarSecuencia(a,b);
+    var c = this.irCaraRoja();
+    algoritmo = this.concatenarSecuencia(algoritmo,c);
+    var d = this.irAlCentro();
+    algoritmo = this.concatenarSecuencia(algoritmo,d);
+    var e = this.colocarCentros();
+    algoritmo = this.concatenarSecuencia(algoritmo,e);
+    return algoritmo ;
+  }
+
+
+}
+
+// Paso 6 : Colocar esquinas
+
+ esquinasBienColocadas(){
+   var esquinas = [1,2,5,6] ;
+   for(var i = 0 ; i < 4 ; i++){
+      if( ! this.esquinaBienColocada(esquinas[i]) ){
+        return  false ;
+      }
+   }
+   return true ;
+
+ }
+
+ hayUnaOMasEsquinasBienColocadas(){
+   var esquinas = [1,2,5,6] ;
+   for(var i = 0 ; i < 4 ; i++){
+      if( this.esquinaBienColocada(esquinas[i]) ){
+        return  true ;
+      }
+   }
+   return false ;
+
+ }
+
+ EsquinaBienColocada(){
+   var esquinas = [1,2,5,6] ;
+   for(var i = 0 ; i < 4 ; i++){
+      if( this.esquinaBienColocada(esquinas[i]) ){
+        return  esquinas[i] ;
+      }
+   }
+
+
+ }
+
+ irEsquinaBienColocada(n){
+
+   var esquinas = [1,2,5,6] ;
+   var ir = ["","z","z'","2z"] ;
+   for(var i = 0  ; i < 4  ; i++ ){
+     if(n == esquinas[i]){
+       this.aplicarSecuenciaTransformaciones(ir[i]);
+       return ir[i] ;
+     }
+
+   }
+
+ }
+
+ colorcarEs(){
+
+   var secuencia = "r,t',l,t,r',t',l',t";
+   var algoritmo = secuencia ;
+
+   console.log(" antes entrar primero  Front Color : "+this.Front[1][1]);
+   this.aplicarSecuenciaTransformaciones(secuencia) ;
+   var roja = this.irCaraRoja() ;
+   algoritmo = this.concatenarSecuencia(algoritmo,roja);
+
+   console.log(" antes entrar segundo  Front Color : "+this.Front[1][1]);
+
+   if(!this.esquinasBienColocadas()){
+     console.log("segundo");
+     this.aplicarSecuenciaTransformaciones(this.secuenciaNegada(roja))
+     algoritmo = this.concatenarSecuencia(algoritmo,this.secuenciaNegada(roja));
+     this.aplicarSecuenciaTransformaciones(secuencia) ;
+     algoritmo = this.concatenarSecuencia(algoritmo,secuencia);
+
+   }
+
+
+
+
+   return algoritmo ;
+ }
+
+ colocarEsquinasT(){
+   var roja = this.irCaraRoja();
+   var algoritmo = roja ;
+   if(!this.esquinasBienColocadas()){
+
+     if(this.hayUnaOMasEsquinasBienColocadas()){
+       console.log("una bien colocada")
+       var esquina = this.EsquinaBienColocada() ;
+       var a = this.irEsquinaBienColocada(esquina) ;
+       algoritmo = this.concatenarSecuencia(algoritmo,a)
+       var b = this.colorcarEs() ;
+       algoritmo = this.concatenarSecuencia(algoritmo,b)
+       return algoritmo ;
+
+     }else{
+       console.log("ninguna bien colocada")
+
+       var secuencia =  "r,t',l,t,r',t',l',t";
+       algoritmo = this.concatenarSecuencia(algoritmo,secuencia)
+       this.aplicarSecuenciaTransformaciones(secuencia);
+       var esquina = this.EsquinaBienColocada() ;
+
+       while(!this.esquinasBienColocadas()){
+        var b = this.irEsquinaBienColocada(esquina) ;
+        algoritmo = this.concatenarSecuencia(algoritmo,b)
+        var c = this.colorcarEs() ;
+        algoritmo = this.concatenarSecuencia(algoritmo,c)
+        var roja = this.irCaraRoja();
+        algoritmo = this.concatenarSecuencia(algoritmo,roja)
+
+       }
+
+       return algoritmo ;
+
+
+     }
+
+   }
+   console.log("Bien colocadas")
+   return "" ;
+ }
+
+// Paso 7 : Oientar Esquinas
+
+ orientacionEsquina(){
+
+  if( this.Right[0][0] == this.amarillo ){
+    return 1 ;
+  }else if(this.Front[0][2] ==  this.amarillo ){
+    return 2;
+  }else{
+    return 0;
+
+  }
+
+}
+
+ secuenciaOrientacion(oriencacion){
+   var o = "r',d,r,d',r',d,r,d'"
+   var orientar = ["",o,o+","+o];
+
+   for (var  i = 0 ; i < 3 ;i++){
+        if (oriencacion == i){
+           return orientar[i] ;
+        }
+   }
+
+ }
+
+ orientarEsquinas(){
+
+   var algoritmo = "" ;
+
+   for(var i = 0 ; i < 4 ; i++){
+
+      var orientacion_esquina = this.orientacionEsquina() ;
+      var secuencia = this.secuenciaOrientacion(orientacion_esquina) ;
+      this.aplicarSecuenciaTransformaciones(secuencia);
+      algoritmo = this.concatenarSecuencia(algoritmo,secuencia) ;
+
+      this.aplicarSecuenciaTransformaciones("t");
+      algoritmo = this.concatenarSecuencia(algoritmo,"t") ;
+
+      }
+
+
+
+   return algoritmo ;
+
+ }
+
+ //
+ resolver(){
+
+
+   var al_cruz = cubo.cruz();
+   var esquinas_d = cubo.colorcarEsquinasD() ;
+   var lados = cubo.hacerLados();
+   var cruz_t = cubo.hacerCruzTop();
+   var centros = cubo.hacerCentros();
+   var esquinas_t = cubo.colocarEsquinasT();
+   var ir = cubo.irCaraRoja();
+   var orientar_esquinas = cubo.orientarEsquinas();
+
+
+   return al_cruz+","+esquinas_d+","+lados+","+cruz_t+","+centros+","+esquinas_t+","+ir+","+orientar_esquinas ;
+
+ }
+
 
 //
   dibujar(){
@@ -1732,7 +2329,6 @@ colocarLado(colores){
 
 }
 
-
 function dibujarEjes(){
 
    fill(0,0,0);
@@ -1754,10 +2350,19 @@ function dibujarEjes(){
 var easycam ;
 var cubo = new Cubo() ;
 
-cubo.desordenar();
-cubo.cruz();
-cubo.colorcarEsquinasD();
-cubo.hacerLados();
+var desordenar = cubo.desordenar() ;
+var solucion = cubo.resolver() ;
+cubo.resetear() ;
+
+console.log("Secuencia Desordenado : "+desordenar);
+console.log("Secuencia Solucion : "+solucion);
+
+cubo.aplicarSecuenciaTransformaciones(desordenar);
+var s_p = cubo.procesarSecuencia(solucion);
+
+var i = 0 ;
+var x = 0 ;
+var resolver = false ;
 
 function setup() {
   createCanvas(800, 800 , WEBGL);
@@ -1766,17 +2371,25 @@ function setup() {
 
 function draw() {
   background(255);
-  rotateZ(PI/2);
-  rotateX(-PI/4) ;
-  rotateY(PI/4) ;
-  dibujarEjes();
+  rotateZ(PI/2+x);
+  rotateX(-PI/4 + x) ;
+  rotateY(PI/4 + x ) ;
 
+  dibujarEjes();
   translate(-100,-100,-100);
+
+
   cubo.dibujar() ;
 
+  if( frameCount%12 == 0 && resolver ){
+   cubo.aplicarSecuenciaTransformaciones(s_p[i]);
+   i=i+1;
+  }
+  
 
+}
 
-
-
-
+function keyPressed() {
+  resolver = true ;
+  return false; // prevent any default behaviour
 }
