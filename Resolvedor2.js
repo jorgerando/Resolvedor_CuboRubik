@@ -16,18 +16,18 @@ class Tapa{
     this.color = color_n
   }
 
-  dibujar(){
+  dibujar(p){
 
-   fill( this.color[0] , this.color[1] , this.color[2] );
-   strokeWeight(3);
-   stroke(0);
-   beginShape();
-   vertex(this.p1.x,this.p1.y,this.p1.z);
-   vertex(this.p2.x,this.p2.y,this.p2.z);
-   vertex(this.p3.x,this.p3.y,this.p3.z);
-   vertex(this.p4.x,this.p4.y,this.p4.z);
-   vertex(this.p1.x,this.p1.y,this.p1.z);
-   endShape();
+   p.fill( this.color[0] , this.color[1] , this.color[2] );
+   p.strokeWeight(3);
+   p.stroke(0);
+   p.beginShape();
+   p.vertex(this.p1.x,this.p1.y,this.p1.z);
+   p.vertex(this.p2.x,this.p2.y,this.p2.z);
+   p.vertex(this.p3.x,this.p3.y,this.p3.z);
+   p.vertex(this.p4.x,this.p4.y,this.p4.z);
+   p.vertex(this.p1.x,this.p1.y,this.p1.z);
+   p.endShape();
 
   }
 }
@@ -50,7 +50,7 @@ class Plano{
 
     var A = this.uniA.copy().mult(this.lado/2) ;
     var B = this.uniB.copy().mult(this.lado/2) ;
-    this.centro = A.add(B);
+    this.centro = (A.add(B)).add(this.origen);
   }
 
   colorear(colores , n_rotaciones ){
@@ -90,7 +90,7 @@ class Plano{
    return puntos ;
  }
 
-  dibujar(){
+  dibujar(p){
 
    var puntos = this.calcularPuntos() ;
    var tapas = [] ;
@@ -112,7 +112,7 @@ class Plano{
 
 
    for ( var i = 0 ; i < tapas.length; i++ ){
-       tapas[i].dibujar() ;
+       tapas[i].dibujar(p) ;
    }
 
 
@@ -122,6 +122,39 @@ class Plano{
 
     return this.colores[x][y]
   }
+
+  dibujar2D(p,texto){
+
+    var puntos = this.calcularPuntos() ;
+    var tapas = [] ;
+    var color = [255,0,0];
+
+    for ( var y = 0 ; y < 3 ; y++){
+       for( var x = 0 ; x < 3 ; x++ ){
+
+           var A = puntos[x][y] ;
+           var B = puntos[x+1][y] ;
+           var C = puntos[x][y+1] ;
+           var D = puntos[x+1][y+1] ;
+
+           var posicion = [A,B,D,C] ;
+           var tapa_a = new Tapa(this.colores[x][y] ,posicion) ;
+           tapas.push(tapa_a);
+       }
+    }
+
+
+    for ( var i = 0 ; i < tapas.length; i++ ){
+        tapas[i].dibujar(p) ;
+    }
+
+    p.textSize(40);
+    p.textStyle(p.ITALIC);
+    p.noStroke();
+    p.fill(0);
+    p.textAlign(p.CENTER,p.CENTER);
+    p.text(texto,this.centro.x,this.centro.y);
+   }
 
 }
 
@@ -2291,14 +2324,14 @@ hacerCentros(){
  resolver(){
 
 
-   var al_cruz = cubo.cruz();
-   var esquinas_d = cubo.colorcarEsquinasD() ;
-   var lados = cubo.hacerLados();
-   var cruz_t = cubo.hacerCruzTop();
-   var centros = cubo.hacerCentros();
-   var esquinas_t = cubo.colocarEsquinasT();
-   var ir = cubo.irCaraRoja();
-   var orientar_esquinas = cubo.orientarEsquinas();
+   var al_cruz = this.cruz();
+   var esquinas_d = this.colorcarEsquinasD() ;
+   var lados = this.hacerLados();
+   var cruz_t = this.hacerCruzTop();
+   var centros = this.hacerCentros();
+   var esquinas_t = this.colocarEsquinasT();
+   var ir = this.irCaraRoja();
+   var orientar_esquinas = this.orientarEsquinas();
 
 
    return al_cruz+","+esquinas_d+","+lados+","+cruz_t+","+centros+","+esquinas_t+","+ir+","+orientar_esquinas ;
@@ -2307,7 +2340,7 @@ hacerCentros(){
 
 
 //
-  dibujar(){
+  dibujar(p){
 
     this.plano4.colorear(this.Front,1) ;
     this.plano3.colorear(this.Top,2) ;
@@ -2317,46 +2350,47 @@ hacerCentros(){
     this.plano5.colorear(this.Left,1) ;
 
 
-    this.plano1.dibujar() ;
-    this.plano2.dibujar() ;
-    this.plano3.dibujar() ;
-    this.plano4.dibujar() ;
-    this.plano5.dibujar() ;
-    this.plano6.dibujar() ;
+    this.plano1.dibujar(p) ;
+    this.plano2.dibujar(p) ;
+    this.plano3.dibujar(p) ;
+    this.plano4.dibujar(p) ;
+    this.plano5.dibujar(p) ;
+    this.plano6.dibujar(p) ;
 
 
   }
 
 }
 
-function dibujarEjes(){
+function dibujarEjes(p){
 
-   fill(0,0,0);
-   stroke(0,0,0);
-   strokeWeight(3) ;
-   line(0,0,0,-200,0,0) ;
-   line(0,0,0,0,-200,0) ;
-   line(0,0,0,0,0,200) ;
-   strokeWeight(40) ;
-   stroke(255,0,0);
-   point(0,-200,0)
-   stroke(0,255,0);
-   point(0,0,200)
-   stroke(0,0,255);
-   point(-200,0,0)
+   p.fill(0,0,0);
+   p.stroke(0,0,0);
+   p.strokeWeight(3) ;
+   p.line(0,0,0,-200,0,0) ;
+   p.line(0,0,0,0,-200,0) ;
+   p.line(0,0,0,0,0,200) ;
+   p.strokeWeight(40) ;
+   p.stroke(255,0,0);
+   p.point(0,-200,0)
+   p.stroke(0,255,0);
+   p.point(0,0,200)
+   p.stroke(0,0,255);
+   p.point(-200,0,0)
 
 }
 
-var easycam ;
-var cubo = new Cubo() ;
+//---------------------------------------------
+var cubo = new Cubo()
 
 var desordenar = cubo.desordenar() ;
 var solucion = cubo.resolver() ;
 cubo.resetear() ;
 
-console.log("Secuencia Desordenado : "+desordenar);
-console.log("Secuencia Solucion : "+solucion);
+console.log("Secuencia Desordenado : "+ desordenar);
+console.log("Secuencia Solucion : "+ solucion);
 
+document.write("<p> Secuencia Desordenado : "+desordenar+"</p>")
 cubo.aplicarSecuenciaTransformaciones(desordenar);
 var s_p = cubo.procesarSecuencia(solucion);
 
@@ -2364,32 +2398,43 @@ var i = 0 ;
 var x = 0 ;
 var resolver = false ;
 
-function setup() {
-  createCanvas(800, 800 , WEBGL);
-  easycam = createEasyCam() ;
+var s1 = function (p){
+
+var easycam ;
+
+
+
+
+
+p.setup = function(){
+  p.createCanvas(800, 800 , p.WEBGL);
+  easycam = p.createEasyCam() ;
 }
 
-function draw() {
-  background(255);
-  rotateZ(PI/2+x);
-  rotateX(-PI/4 + x) ;
-  rotateY(PI/4 + x ) ;
+p.draw = function(){
+  p.background(255);
+  p.rotateZ(p.PI/2+x);
+  p.rotateX(-p.PI/4 + x) ;
+  p.rotateY(p.PI/4 + x ) ;
 
-  dibujarEjes();
-  translate(-100,-100,-100);
+  dibujarEjes(p);
+  p.translate(-100,-100,-100);
 
+  cubo.dibujar(p) ;
 
-  cubo.dibujar() ;
-
-  if( frameCount%12 == 0 && resolver ){
+  if( p.frameCount%12 == 0 && p.resolver ){
    cubo.aplicarSecuenciaTransformaciones(s_p[i]);
    i=i+1;
   }
-  
+
 
 }
 
-function keyPressed() {
-  resolver = true ;
-  return false; // prevent any default behaviour
+p.keyPressed = function(){
+  p.resolver = true ;
+  return false;
 }
+
+}
+
+new p5(s1);
