@@ -9,3 +9,5 @@
 ## Explanation video (Spanish) :
 - Rubick Solver :moyai: : https://www.youtube.com/watch?v=jiMaUlAYt3k
 
+## Autor
+* Jorge Rando Hernández :part_alternation_mark: [@jorgerando](https://github.com/jorgerando)
